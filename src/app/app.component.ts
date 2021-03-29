@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'ng-api-wrapper-project';
+  title = 'ng-api-wrapper2-project';
 }

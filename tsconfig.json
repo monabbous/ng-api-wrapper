@@ -10,6 +10,12 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "ng-api-wrapper": [
+        "dist/ng-api-wrapper/ng-api-wrapper",
+        "dist/ng-api-wrapper"
+      ]
+    },
     "target": "es2015",
     "module": "es2020",
     "lib": [

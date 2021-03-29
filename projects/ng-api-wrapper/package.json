@@ -1,0 +1,24 @@
+{
+  "name": "@monabbous/ng-api-wrapper",
+  "version": "0.2.1",
+  "peerDependencies": {
+    "@angular/common": "^9.1.12",
+    "@angular/core": "^9.1.12"
+  },
+  "dependencies": {
+    "tslib": "^1.10.0",
+    "@monabbous/object-digger": "0.0.2",
+    "@monabbous/unflatter": "0.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monabbous/ng-api-wrapper.git"
+  },
+  "keywords": [
+    "angular",
+    "api",
+    "wrapper",
+    "rest",
+    "resource"
+  ]
+}
