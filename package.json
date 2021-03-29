@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy": "ng build --prod ng-api-wrapper && cd dist/ng-api-wrapper && npm publish",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
