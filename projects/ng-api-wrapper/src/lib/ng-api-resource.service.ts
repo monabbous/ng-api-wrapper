@@ -14,10 +14,22 @@ export type ResourceModel = {
   [key: string]: any;
 };
 
+type KeyTypes<T> = {
+  [K in keyof T]-?: K extends string ?
+    string :
+    K extends number ?
+      number :
+      K extends symbol ?
+        symbol :
+        never
+}[keyof T];
+
+type ForceString<T> = T & string;
+
 type AdaptedModel<T> = {
-  // @ts-ignore
-  [key in (keyof T) as `${key}[adapted]`]?: T[key];
+  [key in (keyof T) as `${ForceString<key>}[adapted]`]?: T[key];
 } & T;
+
 
 type ModelFilters<T> = {
   [key: string]: any;

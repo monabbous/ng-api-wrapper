@@ -1,6 +1,6 @@
 {
   "name": "@monabbous/ng-api-wrapper",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "peerDependencies": {
     "@angular/common": "^9.1.12",
     "@angular/core": "^9.1.12"
