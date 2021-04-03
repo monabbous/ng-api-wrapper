@@ -7,7 +7,7 @@ import {NgApiWrapperService} from './ng-api-wrapper.service';
 import {digger} from '@monabbous/object-digger';
 
 export type ResourceModel = {
-  id?: number;
+  id?: any;
 
   [key: number]: any;
 
@@ -110,8 +110,8 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
     }
   } = {};
 
-  page$: Observable<ResourcePage<T, P, M>>;
-  model$: Observable<ResourceItem<T>>;
+  page$: Observable<ResourcePage<AdaptedModel<T>, P, M>>;
+  model$: Observable<ResourceItem<AdaptedModel<T>>>;
   cachedModel$ = new BehaviorSubject<ResourceItem<T>>(null);
   refresher$ = new BehaviorSubject(null);
   loadmore$ = new BehaviorSubject(null);
@@ -270,12 +270,12 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
     });
   }
 
-  delete<R = any>(id: number, body: any = {}): Observable<R> {
+  delete<R = any>(id, body: any = {}): Observable<R> {
     body = this.upAdapt(body, 'delete');
     return this.http.delete({
       version: this.getDefaultVersion('delete', body),
       server: this.getDefaultServer('delete', body),
-      path: this.getParentPrefix('delete', body) + this.getResourcePath('delete', body),
+      path: this.getParentPrefix('delete', body) + this.getResourcePath('delete', body, id),
       body
     });
   }
@@ -356,7 +356,7 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
             return false;
           }),
           tap(() => reset = false),
-          smartResourcePageRefresh<T, P, M>(options?.uniqueId),
+          smartResourcePageRefresh<AdaptedModel<T>, P, M>(options?.uniqueId),
         );
 
     this.model$ =
