@@ -102,7 +102,10 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
   defaultServer;
   defaultVersion;
   accessor;
+  params: any = {};
   filters: ModelFilters<T> = {};
+  sort_by:  keyof T | string;
+  sort_order: 'desc' | 'asc' = 'asc';
   adapters: {
     [key in keyof T]?: {
       up?: (value, body?, method?: ResourceOperation) => T[key];
@@ -191,9 +194,21 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
     return this;
   }
 
+  setParam(key: string, value: any): this {
+    this.params[key] = value;
+    return this;
+  }
+
+  sortBy(field: keyof T | string, order: 'desc' | 'asc' = 'asc'): this {
+    this.sort_by = field;
+    this.sort_order = order;
+    return this;
+  }
+
   get(filters = {}): Observable<ResourcePage<AdaptedModel<T>, P, M>> {
-    let body = {...this.filters, ...filters};
-    body = this.upAdapt(body, 'get');
+    filters = {...this.filters, ...filters};
+    filters = this.upAdapt(filters, 'get');
+    const body = this.parseSort(this.parseFilters(this.params, filters, 'get'));
     return this.http.get<ResourcePage<T, P, M>>({
       version: this.getDefaultVersion('get', body),
       server: this.getDefaultServer('get', body),
@@ -228,8 +243,8 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
   }
 
   find(id): Observable<ResourceItem<AdaptedModel<T>, P, M>> {
-    let body = {...this.filters};
-    body = this.upAdapt(body, 'find');
+    const filters = this.upAdapt(this.filters, 'find');
+    const body = this.parseFilters(this.params, filters, 'find');
     return this.http.get<ResourceItem<T, P, M>>({
       version: this.getDefaultVersion('find', body),
       server: this.getDefaultServer('find', body),
@@ -373,5 +388,15 @@ export class NgApiResourceService<T extends ResourceModel = object, P = object, 
   superviseRefreshers(...services: NgApiResourceService<any>[]): this {
     services.forEach(service => service.refresher$ = this.refresher$);
     return this;
+  }
+
+  protected parseFilters(params: any, filters: any, operation: ResourceOperation) {
+    return {...params, ...filters};
+  }
+
+  protected parseSort(params) {
+    params.sort_by = this.sort_by;
+    params.sort_order = this.sort_order;
+    return params;
   }
 }
